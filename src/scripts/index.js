@@ -1,22 +1,24 @@
+import {handleCustomInputRange} from "./input.js"
+import { genresList, albumList } from "./productsData.js";
+import { changeTheme, themePreferences } from "./theme.js";
+
 /* Desenvolva sua lógica aqui ... */
 
-function renderGenreItems(genres) {
+const renderGenreItems = (genres) => {
   const ulGenreList = document.querySelector(".genres__list");
 
-  for (let i = 0; i < genres.length; i++) {
-    const currentGenre = genres[i];
-
+  genres.forEach(genre => {
     const liGenre = document.createElement("li");
-    liGenre.innerText = currentGenre;
+    liGenre.innerText = genre;
     liGenre.classList.add("genre__item", "text3");
-    if (currentGenre === "Todos") {
+    if (genre === "Todos") {
       liGenre.classList.add("active");
     }
     ulGenreList.appendChild(liGenre);
-  }
-}
+  })}
 
-function createAlbumCard(albumData) {
+
+const createAlbumCard = (albumData) => {
   // CRIANDO OS ELEMENTOS
   const card = document.createElement("li");
 
@@ -75,41 +77,38 @@ function createAlbumCard(albumData) {
   return card;
 }
 
-function renderAlbumCards(albums) {
+const renderAlbumCards = (albums) => {
   const ulAlbumList = document.querySelector(".albums__list");
   ulAlbumList.innerHTML = "";
 
-  for (let i = 0; i < albums.length; i++) {
-    const currentAlbum = albums[i];
-    const albumCard = createAlbumCard(currentAlbum);
+  albums.forEach(album => {
+    const albumCard = createAlbumCard(album);
     ulAlbumList.appendChild(albumCard);
-  }
+  })
 }
 
-function handleFilter(albums, genreFilter = "Todos", priceFilter) {
+const handleFilter = (albums, genreFilter = "Todos", priceFilter) => {
   const filteredAlbums = [];
 
-  for (let i = 0; i < albums.length; i++) {
-    const currentAlbum = albums[i];
+  albums.forEach(album => {
     if (
-      (currentAlbum.genre === genreFilter || genreFilter === "Todos") &&
-      currentAlbum.price <= priceFilter
+      (album.genre === genreFilter || genreFilter === "Todos") &&
+      album.price <= priceFilter
     ) {
-      filteredAlbums.push(currentAlbum);
+      filteredAlbums.push(album);
     }
-  }
+  })
 
   return filteredAlbums;
 }
 
-function removeActiveClass(genres) {
-  for (let i = 0; i < genres.length; i++) {
-    const genre = genres[i];
+const removeActiveClass = (genres) => {
+  genres.forEach(genre => {
     genre.classList.remove("active");
-  }
+  })
 }
 
-function handleFilterEvents(albums) {
+const handleFilterEvents = (albums) => {
   const genres = document.querySelectorAll(".genre__item");
   const inputPriceRange = document.querySelector(".price__input-range");
   const spanPriceValue = document.querySelector(".price-range__value--dynamic");
@@ -117,27 +116,29 @@ function handleFilterEvents(albums) {
   let genreCategory = "Todos";
   let priceValue = inputPriceRange.valueAsNumber;
 
-  for (let i = 0; i < genres.length; i++) {
-    const currentGenre = genres[i];
-    currentGenre.addEventListener("click", function (event) {
+  genres.forEach(genre => {
+    genre.addEventListener("click", (event) => {
       removeActiveClass(genres);
-      currentGenre.classList.add("active");
+      genre.classList.add("active");
       genreCategory = event.target.innerText;
 
       const albumsToRender = handleFilter(albums, genreCategory, priceValue);
-      renderAlbumCards(albumsToRender);
-    });
-  }
+      renderAlbumCards(albumsToRender)
+  })})
+  
 
-  inputPriceRange.addEventListener("input", function (event) {
+  inputPriceRange.addEventListener("input", (event) => {
     priceValue = event.target.value;
     spanPriceValue.innerText = "R$ " + priceValue;
     const albumsToRender = handleFilter(albums, genreCategory, priceValue);
 
     renderAlbumCards(albumsToRender);
-  });
-}
+  })}
+
 
 renderGenreItems(genresList);
 handleFilterEvents(albumList);
 renderAlbumCards(albumList);
+handleCustomInputRange();
+changeTheme();
+themePreferences();
