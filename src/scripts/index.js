@@ -34,7 +34,7 @@ const createAlbumCard = (albumData) => {
   const albumBuyButton = document.createElement("button");
 
   // CARD
-  card.classList.add("album__item");
+  card.classList.add("album__item", "slide");
 
   // COVER IMG
   albumCoverContainer.classList.add("album__cover-container");
